@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.task.praytimes.times.data.local.LocalSourceImp
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.RemoteSourceImp
 import com.task.praytimes.times.data.remote.repo.RepoImp
+import com.task.praytimes.times.domain.PrayerTimesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -16,9 +18,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val repo = RepoImp.getInstance(RemoteSourceImp.getInstance())
+        val getPrayerTimesUseCase = PrayerTimesUseCase(
+            RepoImp.getInstance(
+                RemoteSourceImp.getInstance(),
+                LocalSourceImp.getInstance(this)
+            )
+        )
+
         lifecycleScope.launch(Dispatchers.IO) {
-            repo.getPrayerTimes(2023, 12, 30.9836957, 31.1591778).collectLatest {
+            getPrayerTimesUseCase(2023, 12, 30.9836957, 31.1591778).collectLatest {
                 when(it) {
                     is ApiState.Failure -> Log.i("TAG", "failure: ${it.error}")
                     is ApiState.Loading -> Log.i("TAG", "loading")
