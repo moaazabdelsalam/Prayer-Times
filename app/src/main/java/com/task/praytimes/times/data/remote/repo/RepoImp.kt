@@ -2,7 +2,7 @@ package com.task.praytimes.times.data.remote.repo
 
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.RemoteSource
-import com.task.praytimes.times.data.remote.model.PrayerTimesResponse
+import com.task.praytimes.times.presentation.PrayerTimes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -29,13 +29,13 @@ class RepoImp private constructor(
         month: Int,
         latitude: Double,
         longitude: Double
-    ): Flow<ApiState<PrayerTimesResponse>> {
+    ): Flow<ApiState<List<PrayerTimes>>> {
         return flow {
             emit(ApiState.Loading)
             val result = remoteSource.getPrayerTimes(year, month, latitude, longitude)
             if (result.isSuccessful) {
                 result.body()?.let {
-                    emit(ApiState.Success(it))
+                    emit(ApiState.Success(it.convertToPrayerTimes()))
                 } ?: emit(ApiState.Failure("Null Response"))
             } else {
                 emit(ApiState.Failure("Failure Response: ${result.message()}"))

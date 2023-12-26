@@ -11,13 +11,13 @@ data class Timings(
     @SerializedName("Fajr")
     val fajr: String,
     @SerializedName("Firstthird")
-    val firstthird: String,
+    val firstThird: String,
     @SerializedName("Imsak")
     val imsak: String,
     @SerializedName("Isha")
     val isha: String,
     @SerializedName("Lastthird")
-    val lastthird: String,
+    val lastThird: String,
     @SerializedName("Maghrib")
     val maghrib: String,
     @SerializedName("Midnight")

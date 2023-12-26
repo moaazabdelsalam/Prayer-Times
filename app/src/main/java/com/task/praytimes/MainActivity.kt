@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
                 when(it) {
                     is ApiState.Failure -> Log.i("TAG", "failure: ${it.error}")
                     is ApiState.Loading -> Log.i("TAG", "loading")
-                    is ApiState.Success -> Log.i("TAG", "success: ${it.data.timingsData.size}")
+                    is ApiState.Success -> Log.i("TAG", "success: ${it.data}")
                 }
             }
         }
