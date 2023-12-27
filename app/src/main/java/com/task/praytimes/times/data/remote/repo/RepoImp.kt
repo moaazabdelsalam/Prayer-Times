@@ -4,9 +4,6 @@ import com.task.praytimes.times.data.local.LocalSource
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.RemoteSource
 import com.task.praytimes.times.presentation.PrayerTimes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import java.util.Date
 
 class RepoImp private constructor(
@@ -27,29 +24,38 @@ class RepoImp private constructor(
         }
     }
 
-    override fun getPrayerTimes(
+    override suspend fun getPrayerTimes2(
         year: Int,
         month: Int,
         latitude: Double,
         longitude: Double
-    ): Flow<ApiState<List<PrayerTimes>>> {
-        return flow {
-            emit(ApiState.Loading)
+    ): ApiState<List<PrayerTimes>> {
+        return try {
             val result = remoteSource.getPrayerTimes(year, month, latitude, longitude)
             if (result.isSuccessful) {
                 result.body()?.let {
-                    emit(ApiState.Success(it.convertToPrayerTimes()))
-                } ?: emit(ApiState.Failure("Null Response"))
+                    val prayerTimes = it.convertToPrayerTimes()
+                    //addPrayerTimesToLocal(prayerTimes)
+                    ApiState.Success(prayerTimes)
+                } ?: ApiState.Failure("Null Response")
             } else {
-                emit(ApiState.Failure("Failure Response: ${result.message()}"))
+                ApiState.Failure("Failure Response: ${result.message()}")
             }
-        }.catch {
-            emit(ApiState.Failure("Exception: ${it.message}"))
+        } catch (e: Exception) {
+            ApiState.Failure("Exception: ${e.message}")
         }
     }
 
     override fun getCurrentDate(): String {
         return localSource.getCurrentDate()
+    }
+
+    override suspend fun getLocalPrayerTimes(): List<PrayerTimes> {
+        return localSource.getLocalPrayerTimes().convertToPrayerTimes()
+    }
+
+    override suspend fun addPrayerTimesToLocal(prayerTimes: List<PrayerTimes>) {
+        localSource.addPrayerTimesToLocal(prayerTimes.convertToLocalPrayerTimes())
     }
 
     override fun getStoredDate(): Date? {

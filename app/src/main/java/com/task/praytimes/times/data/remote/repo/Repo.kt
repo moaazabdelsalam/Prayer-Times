@@ -6,13 +6,14 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 interface Repo {
-    fun getPrayerTimes(
+    suspend fun getPrayerTimes2(
         year: Int,
         month: Int,
         latitude: Double,
         longitude: Double
-    ): Flow<ApiState<List<PrayerTimes>>>
-
+    ): ApiState<List<PrayerTimes>>
     fun getStoredDate(): Date?
     fun getCurrentDate(): String
+    suspend fun getLocalPrayerTimes(): List<PrayerTimes>
+    suspend fun addPrayerTimesToLocal(prayerTimes: List<PrayerTimes>)
 }

@@ -1,5 +1,6 @@
 package com.task.praytimes.times.data.remote.repo
 
+import com.task.praytimes.times.data.local.db.LocalPrayerTimes
 import com.task.praytimes.times.data.remote.model.PrayerTimesResponse
 import com.task.praytimes.times.presentation.PrayerTimes
 
@@ -20,6 +21,48 @@ fun PrayerTimesResponse.convertToPrayerTimes(): List<PrayerTimes> {
             midnight = it.timings.midnight,
             firstThird = it.timings.firstThird,
             lastThird = it.timings.lastThird
+        )
+    }
+}
+
+fun List<PrayerTimes>.convertToLocalPrayerTimes(): List<LocalPrayerTimes> {
+    return map {
+        LocalPrayerTimes(
+            date = it.date,
+            hijriDate = it.hijriDate,
+            weekDay = it.weekDay,
+            fajr = it.fajr,
+            sunrise = it.sunrise,
+            dhuhr = it.dhuhr,
+            asr = it.asr,
+            sunset = it.sunset,
+            maghrib = it.maghrib,
+            isha = it.isha,
+            imsak = it.imsak,
+            midnight = it.midnight,
+            firstThird = it.firstThird,
+            lastThird = it.lastThird
+        )
+    }
+}
+
+fun List<LocalPrayerTimes>.convertToPrayerTimes(): List<PrayerTimes> {
+    return map {
+        PrayerTimes(
+            date = it.date,
+            hijriDate = it.hijriDate,
+            weekDay = it.weekDay,
+            fajr = it.fajr,
+            sunrise = it.sunrise,
+            dhuhr = it.dhuhr,
+            asr = it.asr,
+            sunset = it.sunset,
+            maghrib = it.maghrib,
+            isha = it.isha,
+            imsak = it.imsak,
+            midnight = it.midnight,
+            firstThird = it.firstThird,
+            lastThird = it.lastThird
         )
     }
 }

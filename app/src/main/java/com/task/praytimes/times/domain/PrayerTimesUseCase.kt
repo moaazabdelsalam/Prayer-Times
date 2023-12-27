@@ -3,26 +3,22 @@ package com.task.praytimes.times.domain
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.repo.Repo
 import com.task.praytimes.times.presentation.PrayerTimes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class PrayerTimesUseCase(
     private val repo: Repo
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         year: Int,
         month: Int,
         latitude: Double,
         longitude: Double
-    ): Flow<ApiState<List<PrayerTimes>>> {
-        return repo.getPrayerTimes(year, month, latitude, longitude)
-            .map { state ->
-                if (state is ApiState.Success) {
-                    ApiState.Success(getSevenDaysTimes(state.data))
-                } else {
-                    state
-                }
-            }
+    ): ApiState<List<PrayerTimes>> {
+        val resultState = repo.getPrayerTimes2(year, month, latitude, longitude)
+        return if (resultState is ApiState.Success) {
+            ApiState.Success(getSevenDaysTimes(resultState.data))
+        } else {
+            resultState
+        }
     }
 
     private fun getSevenDaysTimes(list: List<PrayerTimes>): List<PrayerTimes> {
