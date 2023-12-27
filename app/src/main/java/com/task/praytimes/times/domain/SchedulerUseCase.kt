@@ -37,8 +37,12 @@ class SchedulerUseCase(
         }
     }
 
-    private fun isTimePassed(): Boolean {
-        return false
+    private suspend fun isTimePassed(): Boolean {
+        val latestStoredDate = repo.getLatestStoredDate()
+        latestStoredDate ?: return false
+        val currentTimeMillis = System.currentTimeMillis()
+        val storedTimeMillis = latestStoredDate.time
+        return currentTimeMillis > storedTimeMillis
     }
 
     private suspend fun makeNetworkCall(
