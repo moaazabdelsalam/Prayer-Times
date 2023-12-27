@@ -1,6 +1,11 @@
-package com.task.praytimes.times.presentation
+package com.task.praytimes.times.data.local.db
 
-data class PrayerTimes(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "prayer_times")
+data class LocalPrayerTimes(
+    @PrimaryKey
     val date: String,
     val hijriDate: String,
     val weekDay: String,
