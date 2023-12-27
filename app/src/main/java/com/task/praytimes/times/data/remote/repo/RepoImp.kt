@@ -1,15 +1,19 @@
 package com.task.praytimes.times.data.remote.repo
 
+import android.util.Log
 import com.task.praytimes.times.data.local.LocalSource
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.RemoteSource
 import com.task.praytimes.times.presentation.PrayerTimes
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class RepoImp private constructor(
     private val remoteSource: RemoteSource,
     private val localSource: LocalSource
 ) : Repo {
+    private val TAG = "TAG RepoIm"
 
     companion object {
         @Volatile
@@ -35,7 +39,6 @@ class RepoImp private constructor(
             if (result.isSuccessful) {
                 result.body()?.let {
                     val prayerTimes = it.convertToPrayerTimes()
-                    //addPrayerTimesToLocal(prayerTimes)
                     ApiState.Success(prayerTimes)
                 } ?: ApiState.Failure("Null Response")
             } else {
@@ -58,7 +61,15 @@ class RepoImp private constructor(
         localSource.addPrayerTimesToLocal(prayerTimes.convertToLocalPrayerTimes())
     }
 
-    override fun getStoredDate(): Date? {
-        return localSource.getStoredDate()
+    override suspend fun getLatestStoredDate(): Date? {
+        //return localSource.getStoredDate()
+        val lastSavedPrayerTimes = getLocalPrayerTimes().lastOrNull() ?: return null
+        return try {
+            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+            sdf.parse(lastSavedPrayerTimes.date)
+        } catch (e: Exception) {
+            Log.i(TAG, "getLatestStoredDate: exception ${e.message}")
+            null
+        }
     }
 }

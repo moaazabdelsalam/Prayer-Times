@@ -12,7 +12,7 @@ interface Repo {
         latitude: Double,
         longitude: Double
     ): ApiState<List<PrayerTimes>>
-    fun getStoredDate(): Date?
+    suspend fun getLatestStoredDate(): Date?
     fun getCurrentDate(): String
     suspend fun getLocalPrayerTimes(): List<PrayerTimes>
     suspend fun addPrayerTimesToLocal(prayerTimes: List<PrayerTimes>)
