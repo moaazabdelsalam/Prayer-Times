@@ -1,4 +1,4 @@
-package com.task.praytimes.times.data.remote.repo
+package com.task.praytimes.times.data.repo
 
 import com.task.praytimes.times.data.local.db.LocalPrayerTimes
 import com.task.praytimes.times.data.remote.model.PrayerTimesResponse
@@ -7,8 +7,9 @@ import com.task.praytimes.times.presentation.PrayerTimes
 fun PrayerTimesResponse.convertToPrayerTimes(): List<PrayerTimes> {
     return this.timingsData.map {
         PrayerTimes(
-            date = it.date.readable,
-            hijriDate = "${it.date.hijri.year}-${it.date.hijri.month.ar}-${it.date.hijri.day}",
+            date = it.date.gregorian.date,
+            dateReadable = it.date.readable,
+            hijriDate = "${it.date.hijri.day} ${it.date.hijri.month.ar} ${it.date.hijri.year}",
             weekDay = it.date.hijri.weekday.ar,
             fajr = it.timings.fajr,
             sunrise = it.timings.sunrise,
@@ -29,6 +30,7 @@ fun List<PrayerTimes>.convertToLocalPrayerTimes(): List<LocalPrayerTimes> {
     return map {
         LocalPrayerTimes(
             date = it.date,
+            dateReadable = it.dateReadable,
             hijriDate = it.hijriDate,
             weekDay = it.weekDay,
             fajr = it.fajr,
@@ -50,6 +52,7 @@ fun List<LocalPrayerTimes>.convertToPrayerTimes(): List<PrayerTimes> {
     return map {
         PrayerTimes(
             date = it.date,
+            dateReadable = it.dateReadable,
             hijriDate = it.hijriDate,
             weekDay = it.weekDay,
             fajr = it.fajr,

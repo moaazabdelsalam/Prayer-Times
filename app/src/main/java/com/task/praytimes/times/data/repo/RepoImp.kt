@@ -1,4 +1,4 @@
-package com.task.praytimes.times.data.remote.repo
+package com.task.praytimes.times.data.repo
 
 import android.util.Log
 import com.task.praytimes.times.data.local.LocalSource
@@ -66,7 +66,7 @@ class RepoImp private constructor(
         val lastSavedPrayerTimes = getLocalPrayerTimes().lastOrNull() ?: return null
         return try {
             val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
-            sdf.parse(lastSavedPrayerTimes.date)
+            sdf.parse(lastSavedPrayerTimes.dateReadable)
         } catch (e: Exception) {
             Log.i(TAG, "getLatestStoredDate: exception ${e.message}")
             null

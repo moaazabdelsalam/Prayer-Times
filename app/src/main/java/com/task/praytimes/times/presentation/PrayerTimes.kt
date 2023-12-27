@@ -2,6 +2,7 @@ package com.task.praytimes.times.presentation
 
 data class PrayerTimes(
     val date: String,
+    val dateReadable: String,
     val hijriDate: String,
     val weekDay: String,
     val fajr: String,

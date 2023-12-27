@@ -2,7 +2,7 @@ package com.task.praytimes.times.domain
 
 import android.util.Log
 import com.task.praytimes.times.data.remote.ApiState
-import com.task.praytimes.times.data.remote.repo.Repo
+import com.task.praytimes.times.data.repo.Repo
 import com.task.praytimes.times.presentation.PrayerTimes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class LocalPrayerTimes(
     @PrimaryKey
     val date: String,
+    val dateReadable: String,
     val hijriDate: String,
     val weekDay: String,
     val fajr: String,

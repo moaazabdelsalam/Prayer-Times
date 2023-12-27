@@ -1,4 +1,4 @@
-package com.task.praytimes.times.data.remote.repo
+package com.task.praytimes.times.data.repo
 
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.presentation.PrayerTimes
