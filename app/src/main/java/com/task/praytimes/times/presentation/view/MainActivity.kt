@@ -22,45 +22,121 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.task.praytimes.R
+import com.task.praytimes.databinding.ActivityMainBinding
 import com.task.praytimes.times.data.remote.ApiState
-import com.task.praytimes.times.presentation.models.PrayerTimes
 import com.task.praytimes.times.presentation.alarm.AlarmItem
 import com.task.praytimes.times.presentation.alarm.AlarmSchedulerImp
+import com.task.praytimes.times.presentation.models.DayDate
+import com.task.praytimes.times.presentation.models.Prayer
+import com.task.praytimes.times.presentation.models.PrayerTimes
 import com.task.praytimes.times.presentation.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "TAG MainActivity"
+    lateinit var binding: ActivityMainBinding
     private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var datesAdapter: DatesAdapter
+    private lateinit var timesAdapter: TimesAdapter
+    private lateinit var prayerTimes: List<PrayerTimes>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val listener: (String) -> Unit = {
+        showViews(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        init()
         getLocation()
         lifecycleScope.launch(Dispatchers.IO) {
             homeViewModel.prayerTimesState.collectLatest {
                 when (it) {
-                    is ApiState.Failure -> Log.i(TAG, "failure: ${it.error}")
+                    is ApiState.Failure -> {
+                        Log.i(TAG, "failure: ${it.error}")
+                        Snackbar.make(
+                            binding.root,
+                            "something went wrong check connection and try again",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+
                     is ApiState.Loading -> Log.i(TAG, "loading")
                     is ApiState.Success -> {
-                        Log.i(TAG, "success: ${it.data}")
-                        scheduleAlarmToPrayerTimes(it.data)
+                        prayerTimes = it.data
+                        Log.i(TAG, "success: $prayerTimes")
+                        withContext(Dispatchers.Main) { showViews(getCurrentDate()) }
+                        scheduleAlarmToPrayerTimes()
                     }
                 }
             }
         }
     }
 
-    private fun scheduleAlarmToPrayerTimes(prayerTimes: List<PrayerTimes>) {
+    private fun init() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        datesAdapter = DatesAdapter(listener)
+        timesAdapter = TimesAdapter()
+        binding.apply {
+            datesRV.adapter = datesAdapter
+            timesRV.adapter = timesAdapter
+        }
+    }
+
+    private fun showViews(selectedDate: String) {
+        datesAdapter.submitList(getDatesList(prayerTimes))
+        timesAdapter.submitList(getPrayerList(prayerTimes, selectedDate))
+        val today = prayerTimes.find {
+            it.date == selectedDate
+        } ?: prayerTimes[0]
+        binding.apply {
+            dayOfWeekTxt.text = today.weekDay
+            dateHijriTxt.text = today.hijriDate
+            dateTxt.text = today.date
+        }
+    }
+
+    private fun getDatesList(prayerTimes: List<PrayerTimes>): List<DayDate> {
+        return prayerTimes.map {
+            DayDate(
+                dayOfWeek = it.weekDay,
+                fullDate = it.date
+            )
+        }
+    }
+
+    private fun getPrayerList(prayerTimes: List<PrayerTimes>, selectedDate: String): List<Prayer> {
+        val targetPrayerTimes = prayerTimes.find {
+            it.date == selectedDate
+        } ?: prayerTimes[0]
+
+        return listOf(
+            Prayer(name = "صلاه الفجر", time = targetPrayerTimes.fajr),
+            Prayer(name = "شروق الشمس", time = targetPrayerTimes.sunrise),
+            Prayer(name = "صلاه الظهر", time = targetPrayerTimes.dhuhr),
+            Prayer(name = "صلاه العصر", time = targetPrayerTimes.asr),
+            Prayer(name = "غروب الشمس", time = targetPrayerTimes.sunset),
+            Prayer(name = "صلاه المغرب", time = targetPrayerTimes.maghrib),
+            Prayer(name = "صلاه العشاء", time = targetPrayerTimes.isha),
+            Prayer(name = "ثلث الليل الاول", time = targetPrayerTimes.firstThird),
+            Prayer(name = "ثلث الليل الاخير", time = targetPrayerTimes.lastThird)
+        )
+    }
+
+    private fun scheduleAlarmToPrayerTimes() {
         lifecycleScope.launch(Dispatchers.IO) {
             val scheduler = AlarmSchedulerImp(this@MainActivity)
             prayerTimes.forEach {
@@ -100,9 +176,11 @@ class MainActivity : AppCompatActivity() {
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         override fun onLocationResult(p0: LocationResult?) {
             p0?.let {
+                val currentDate = getCurrentDate().split("-")
                 val lastLocation: Location = it.lastLocation
                 homeViewModel.getPrayerTimes(
-                    2023, 12,
+                    year = currentDate[2].toInt(),
+                    month = currentDate[1].toInt(),
                     lastLocation.latitude,
                     lastLocation.longitude
                 )
@@ -209,5 +287,11 @@ class MainActivity : AppCompatActivity() {
     private fun openLocationSettings() {
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivity(intent)
+    }
+
+    private fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val calendar = Calendar.getInstance()
+        return sdf.format(calendar.time)
     }
 }

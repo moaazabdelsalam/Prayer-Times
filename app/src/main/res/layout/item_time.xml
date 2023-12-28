@@ -23,7 +23,7 @@
             tools:text="Fajr" />
 
         <TextView
-            android:id="@+id/dayOfMonthTxt"
+            android:id="@+id/prayerTimeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
