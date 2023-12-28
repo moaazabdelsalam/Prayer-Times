@@ -2,7 +2,7 @@ package com.task.praytimes.times.data.repo
 
 import com.task.praytimes.times.data.local.db.LocalPrayerTimes
 import com.task.praytimes.times.data.remote.model.PrayerTimesResponse
-import com.task.praytimes.times.presentation.PrayerTimes
+import com.task.praytimes.times.presentation.models.PrayerTimes
 
 fun PrayerTimesResponse.convertToPrayerTimes(): List<PrayerTimes> {
     return this.timingsData.map {

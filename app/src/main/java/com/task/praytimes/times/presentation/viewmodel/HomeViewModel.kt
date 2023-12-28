@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.domain.PrayerTimesUseCase
 import com.task.praytimes.times.domain.SchedulerUseCase
-import com.task.praytimes.times.presentation.PrayerTimes
+import com.task.praytimes.times.presentation.models.PrayerTimes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

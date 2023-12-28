@@ -1,4 +1,4 @@
-package com.task.praytimes.times.presentation
+package com.task.praytimes.times.presentation.models
 
 data class PrayerTimes(
     val date: String,

@@ -1,7 +1,7 @@
 package com.task.praytimes.times.data.repo
 
 import com.task.praytimes.times.data.remote.ApiState
-import com.task.praytimes.times.presentation.PrayerTimes
+import com.task.praytimes.times.presentation.models.PrayerTimes
 import java.util.Date
 
 interface Repo {

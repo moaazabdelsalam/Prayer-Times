@@ -23,9 +23,8 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.task.praytimes.R
-import com.task.praytimes.times.Constants
 import com.task.praytimes.times.data.remote.ApiState
-import com.task.praytimes.times.presentation.PrayerTimes
+import com.task.praytimes.times.presentation.models.PrayerTimes
 import com.task.praytimes.times.presentation.alarm.AlarmItem
 import com.task.praytimes.times.presentation.alarm.AlarmSchedulerImp
 import com.task.praytimes.times.presentation.viewmodel.HomeViewModel

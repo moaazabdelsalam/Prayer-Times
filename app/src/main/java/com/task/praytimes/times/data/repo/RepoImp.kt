@@ -4,7 +4,7 @@ import android.util.Log
 import com.task.praytimes.times.data.local.LocalSource
 import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.data.remote.RemoteSource
-import com.task.praytimes.times.presentation.PrayerTimes
+import com.task.praytimes.times.presentation.models.PrayerTimes
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
