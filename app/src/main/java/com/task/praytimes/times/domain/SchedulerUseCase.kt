@@ -49,7 +49,7 @@ class SchedulerUseCase(
 
     private suspend fun isTimePassed(): Boolean {
         val latestStoredDate = repo.getLatestStoredDate()
-        latestStoredDate ?: return false
+        latestStoredDate ?: return true
         val currentTimeMillis = System.currentTimeMillis()
         val storedTimeMillis = latestStoredDate.time
         return currentTimeMillis > storedTimeMillis

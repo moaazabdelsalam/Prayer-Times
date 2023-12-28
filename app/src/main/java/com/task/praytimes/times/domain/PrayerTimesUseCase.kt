@@ -40,12 +40,13 @@ class PrayerTimesUseCase(
 
     private fun getSevenDaysTimes(list: List<PrayerTimes>): List<PrayerTimes> {
         val indexOfCurrentDay = list.indexOfFirst { it.dateReadable == repo.getCurrentDate() }
-        val lastIndex = if ((indexOfCurrentDay + 7) > list.size)
+        val startIndex = if (indexOfCurrentDay == -1) 0 else indexOfCurrentDay
+        val lastIndex = if ((startIndex + 7) > list.size)
             list.size
         else
-            indexOfCurrentDay + 7
+            startIndex + 7
         return list.subList(
-            indexOfCurrentDay,
+            startIndex,
             lastIndex
         )
     }
