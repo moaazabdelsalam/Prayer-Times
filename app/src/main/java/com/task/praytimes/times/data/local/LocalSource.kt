@@ -10,4 +10,5 @@ interface LocalSource {
     fun getCurrentDate(): String
     suspend fun getLocalPrayerTimes(): List<LocalPrayerTimes>
     suspend fun addPrayerTimesToLocal(prayerTimes: List<LocalPrayerTimes>)
+    suspend fun deleteAllLocal()
 }

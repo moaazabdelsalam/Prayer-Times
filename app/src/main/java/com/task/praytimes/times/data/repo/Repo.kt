@@ -5,7 +5,7 @@ import com.task.praytimes.times.presentation.PrayerTimes
 import java.util.Date
 
 interface Repo {
-    suspend fun getPrayerTimes2(
+    suspend fun getPrayerTimes(
         year: Int,
         month: Int,
         latitude: Double,
@@ -15,4 +15,5 @@ interface Repo {
     fun getCurrentDate(): String
     suspend fun getLocalPrayerTimes(): List<PrayerTimes>
     suspend fun addPrayerTimesToLocal(prayerTimes: List<PrayerTimes>)
+    suspend fun deleteAllLocal()
 }

@@ -53,8 +53,10 @@ class LocalSourceImp private constructor(
     }
 
     override suspend fun addPrayerTimesToLocal(prayerTimes: List<LocalPrayerTimes>) {
-        prayerTimesDao.deleteAll()
         prayerTimesDao.addAll(prayerTimes)
     }
 
+    override suspend fun deleteAllLocal() {
+        prayerTimesDao.deleteAll()
+    }
 }
