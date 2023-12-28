@@ -8,15 +8,9 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.task.praytimes.MainActivity
+import com.task.praytimes.times.presentation.view.MainActivity
 import com.task.praytimes.R
 import com.task.praytimes.times.Constants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class AlarmReceiver : BroadcastReceiver() {
     private val TAG = "TAG AlarmReceiver"

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Pray Times</string>
+    <string name="cancel">Cancel</string>
+    <string name="open_setting">Open Settings</string>
+    <string name="permission_needed">Permission Needed</string>
+    <string name="location_permission_needed_message">Location permission needed to be able to give prayer times at your location</string>
+    <string name="location_disabled">Location Disabled</string>
+    <string name="location_disabled_message">please enable location service to give updated times at your location</string>
 </resources>
