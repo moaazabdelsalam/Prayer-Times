@@ -4,15 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".times.presentation.view.MainActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/datesRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_date" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/dayOfWeekTxt"
+        tools:text="الخميس"
+        android:textStyle="bold"
+        android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/datesRV"
+        app:layout_constraintBottom_toTopOf="@id/timesRV"
+        android:layout_marginVertical="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateHijriTxt"
+        tools:text="15 جمادي الثاني 1445"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toStartOf="@id/dayOfWeekTxt"
+        app:layout_constraintTop_toTopOf="@id/dayOfWeekTxt"
+        app:layout_constraintBottom_toBottomOf="@id/dayOfWeekTxt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateTxt"
+        tools:text="28 12 2023"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toStartOf="@id/dateHijriTxt"
+        app:layout_constraintTop_toTopOf="@id/dayOfWeekTxt"
+        app:layout_constraintBottom_toBottomOf="@id/dayOfWeekTxt" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timesRV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dayOfWeekTxt"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
