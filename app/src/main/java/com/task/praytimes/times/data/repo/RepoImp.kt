@@ -28,7 +28,7 @@ class RepoImp private constructor(
         }
     }
 
-    override suspend fun getPrayerTimes2(
+    override suspend fun getPrayerTimes(
         year: Int,
         month: Int,
         latitude: Double,
@@ -62,7 +62,6 @@ class RepoImp private constructor(
     }
 
     override suspend fun getLatestStoredDate(): Date? {
-        //return localSource.getStoredDate()
         val lastSavedPrayerTimes = getLocalPrayerTimes().lastOrNull() ?: return null
         return try {
             val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
@@ -71,5 +70,9 @@ class RepoImp private constructor(
             Log.i(TAG, "getLatestStoredDate: exception ${e.message}")
             null
         }
+    }
+
+    override suspend fun deleteAllLocal() {
+        localSource.deleteAllLocal()
     }
 }
