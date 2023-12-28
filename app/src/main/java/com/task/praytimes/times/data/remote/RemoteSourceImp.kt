@@ -8,7 +8,7 @@ import javax.inject.Singleton
 @Singleton
 class RemoteSourceImp @Inject constructor(
     private val service: PrayerTimesService
-): RemoteSource {
+) : RemoteSource {
 
     override suspend fun getPrayerTimes(
         year: Int,

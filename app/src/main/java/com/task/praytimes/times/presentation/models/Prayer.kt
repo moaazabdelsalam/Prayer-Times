@@ -1,6 +1,6 @@
 package com.task.praytimes.times.presentation.models
 
-data class Prayer (
+data class Prayer(
     val name: String,
     val time: String
 )

@@ -8,9 +8,9 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.task.praytimes.times.presentation.view.MainActivity
 import com.task.praytimes.R
 import com.task.praytimes.times.Constants
+import com.task.praytimes.times.presentation.view.MainActivity
 
 class AlarmReceiver : BroadcastReceiver() {
     private val TAG = "TAG AlarmReceiver"
@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val timing = it.getStringExtra(Constants.EXTRA_TIMING_KEY) ?: return@let
             val time = it.getStringExtra(Constants.EXTRA_TIME_KEY)
             Log.i(TAG, "onAlarmReceive: $timing at $time")
-            context?.let {context ->
+            context?.let { context ->
                 showNotification(context, timing)
             } ?: return@let
         }

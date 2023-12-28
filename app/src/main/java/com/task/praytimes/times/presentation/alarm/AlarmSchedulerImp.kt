@@ -61,16 +61,4 @@ class AlarmSchedulerImp(private val context: Context) : AlarmScheduler {
             }
         }
     }
-
-    override fun cancel(item: AlarmItem) {
-        alarmManager.cancel(
-            PendingIntent.getBroadcast(
-                context,
-                item.time.year + item.time.month.value + item.time.dayOfMonth + item.time.dayOfYear
-                        + item.time.hour + item.time.minute,
-                Intent(context, AlarmReceiver::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        )
-    }
 }

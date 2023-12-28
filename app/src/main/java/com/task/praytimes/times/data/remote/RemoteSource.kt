@@ -10,5 +10,5 @@ interface RemoteSource {
         month: Int,
         latitude: Double,
         longitude: Double
-    ) : Response<PrayerTimesResponse>
+    ): Response<PrayerTimesResponse>
 }
