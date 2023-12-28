@@ -9,11 +9,21 @@ import kotlinx.coroutines.flow.flow
 
 class SchedulerUseCase(
     private val repo: Repo,
-    private val prayerTimesUseCase: PrayerTimesUseCase
+    /*private val prayerTimesUseCase: PrayerTimesUseCase*/
 ) {
     private val TAG = "TAG SchedulerUseCase"
 
-    operator fun invoke(
+    suspend operator fun invoke(): Boolean {
+        Log.i(TAG, "isTimePassed: ${isTimePassed()}")
+        return if (isTimePassed()) {
+            repo.deleteAllLocal()
+            false
+        } else {
+            true
+        }
+    }
+
+    /*operator fun invoke(
         year: Int,
         month: Int,
         latitude: Double,
@@ -35,7 +45,7 @@ class SchedulerUseCase(
                 }
             }
         }
-    }
+    }*/
 
     private suspend fun isTimePassed(): Boolean {
         val latestStoredDate = repo.getLatestStoredDate()
@@ -45,7 +55,7 @@ class SchedulerUseCase(
         return currentTimeMillis > storedTimeMillis
     }
 
-    private suspend fun makeNetworkCall(
+    /*private suspend fun makeNetworkCall(
         year: Int,
         month: Int,
         latitude: Double,
@@ -59,5 +69,5 @@ class SchedulerUseCase(
         } else {
             state
         }
-    }
+    }*/
 }
