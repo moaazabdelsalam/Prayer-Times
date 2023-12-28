@@ -23,3 +23,11 @@ var SharedPreferences.lastUpdateDate
             it.putString(Constants.LAST_UPDATE_DATE, value)
         }
     }
+
+var SharedPreferences.isAlarmScheduled
+    get() = getBoolean(Constants.IS_ALARM_SCHEDULED_PREF, false)
+    set(value) {
+        mEdit {
+            it.putBoolean(Constants.IS_ALARM_SCHEDULED_PREF, value)
+        }
+    }
