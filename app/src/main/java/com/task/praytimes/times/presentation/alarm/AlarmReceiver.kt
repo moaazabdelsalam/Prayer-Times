@@ -24,7 +24,8 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
             val timing = it.getStringExtra(Constants.EXTRA_TIMING_KEY) ?: return@let
-            Log.i(TAG, "onAlarmReceive: $timing")
+            val time = it.getStringExtra(Constants.EXTRA_TIME_KEY)
+            Log.i(TAG, "onAlarmReceive: $timing at $time")
             context?.let {context ->
                 showNotification(context, timing)
             } ?: return@let
@@ -35,7 +36,6 @@ class AlarmReceiver : BroadcastReceiver() {
         appContext: Context,
         timing: String,
     ) {
-        Log.i(TAG, "showNotification: ")
         val notificationManager =
             appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val intent = Intent(appContext, MainActivity::class.java).apply {
