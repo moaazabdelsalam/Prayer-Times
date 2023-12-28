@@ -5,7 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import com.task.praytimes.times.Constants
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class PrayerTimesApp : Application() {
 
     override fun onCreate() {

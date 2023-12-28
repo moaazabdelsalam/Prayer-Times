@@ -1,38 +1,26 @@
 package com.task.praytimes.times.data.local
 
-import android.content.Context
-import com.task.praytimes.times.Constants
 import com.task.praytimes.times.data.local.db.LocalPrayerTimes
-import com.task.praytimes.times.data.local.db.PrayerTimesDatabase
+import com.task.praytimes.times.data.local.db.PrayerTimesDao
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocalSourceImp private constructor(
-    context: Context
+@Singleton
+class LocalSourceImp @Inject constructor(
+    private val prayerTimesDao: PrayerTimesDao
 ) : LocalSource {
-    private val prayerTimesDao = PrayerTimesDatabase.getInstance(context).prayerDao()
-    private val sharedPreferences = PrayerSharedPreferences(context).mPreference()
-
-    companion object {
-        @Volatile
-        private var instance: LocalSourceImp? = null
-        fun getInstance(context: Context): LocalSourceImp {
-            return instance ?: synchronized(this) {
-                val instanceHolder = LocalSourceImp(context)
-                instance = instanceHolder
-                instanceHolder
-            }
-        }
-    }
 
     override fun getStoredDateString(): String? {
-        val storedDateString = sharedPreferences.lastUpdateDate
+        /*val storedDateString = sharedPreferences.lastUpdateDate
         return if (storedDateString != Constants.NO_STORED_DATE)
             storedDateString
         else
-            null
+            null*/
+        return ""
     }
 
     override fun getStoredDate(): Date? {

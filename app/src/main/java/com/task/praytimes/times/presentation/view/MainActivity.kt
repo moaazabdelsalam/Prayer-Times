@@ -2,7 +2,6 @@ package com.task.praytimes.times.presentation.view
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -12,51 +11,42 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.task.praytimes.R
 import com.task.praytimes.times.Constants
-import com.task.praytimes.times.data.local.LocalSourceImp
 import com.task.praytimes.times.data.remote.ApiState
-import com.task.praytimes.times.data.remote.RemoteSourceImp
-import com.task.praytimes.times.data.repo.RepoImp
-import com.task.praytimes.times.domain.PrayerTimesUseCase
-import com.task.praytimes.times.domain.SchedulerUseCase
 import com.task.praytimes.times.presentation.PrayerTimes
 import com.task.praytimes.times.presentation.alarm.AlarmItem
 import com.task.praytimes.times.presentation.alarm.AlarmSchedulerImp
 import com.task.praytimes.times.presentation.viewmodel.HomeViewModel
-import com.task.praytimes.times.presentation.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "TAG MainActivity"
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var geocoder: Geocoder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        init()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         getLocation()
-        /*if (ActivityCompat.checkSelfPermission(
-                this, android.Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestNotificationPermission()
-        }*/
-
-        //homeViewModel.getPrayerTimes(2023, 12, 30.9836957, 31.1591778)
         lifecycleScope.launch(Dispatchers.IO) {
             homeViewModel.prayerTimesState.collectLatest {
                 when (it) {
@@ -65,46 +55,9 @@ class MainActivity : AppCompatActivity() {
                     is ApiState.Success -> {
                         Log.i(TAG, "success: ${it.data}")
                         scheduleAlarmToPrayerTimes(it.data)
-                        /*homeViewModel.isScheduled.collectLatest {isScheduled ->
-                            Log.i(TAG, "isScheduled: $isScheduled")
-                            if (!isScheduled) {
-                                scheduleAlarmToPrayerTimes(it.data)
-                            }
-                        }*/
                     }
                 }
             }
-        }
-    }
-
-    private fun init() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        geocoder = Geocoder(this)
-
-        val viewModelFactory = ViewModelFactory(
-            PrayerTimesUseCase(
-                RepoImp.getInstance(
-                    RemoteSourceImp.getInstance(),
-                    LocalSourceImp.getInstance(this)
-                )
-            ),
-            SchedulerUseCase(
-                RepoImp.getInstance(
-                    RemoteSourceImp.getInstance(),
-                    LocalSourceImp.getInstance(this)
-                )
-            )
-        )
-        homeViewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
-    }
-
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ), Constants.NOTIFICATION_PERMISSION_ID
-            )
         }
     }
 
@@ -194,10 +147,9 @@ class MainActivity : AppCompatActivity() {
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { permissionMap: Map<String, Boolean> ->
                 if (permissionMap.any { isGranted -> isGranted.value }) {
-                    if (isLocationEnabled()){
+                    if (isLocationEnabled()) {
                         requestNewLocationData()
-                    }
-                    else
+                    } else
                         showLocationDisabledDialog()
                 } else {
                     showLocationPermissionNeededDialog()

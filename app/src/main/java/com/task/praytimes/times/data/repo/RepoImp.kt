@@ -8,25 +8,15 @@ import com.task.praytimes.times.presentation.PrayerTimes
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RepoImp private constructor(
+@Singleton
+class RepoImp @Inject constructor(
     private val remoteSource: RemoteSource,
     private val localSource: LocalSource
 ) : Repo {
     private val TAG = "TAG RepoIm"
-
-    companion object {
-        @Volatile
-        private var instance: RepoImp? = null
-        fun getInstance(remoteSource: RemoteSource, localSource: LocalSource): RepoImp {
-            return instance ?: synchronized(this) {
-                val instanceHolder = RepoImp(remoteSource, localSource)
-                instance = instanceHolder
-                instanceHolder
-
-            }
-        }
-    }
 
     override suspend fun getPrayerTimes(
         year: Int,

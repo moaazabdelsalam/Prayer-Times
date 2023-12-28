@@ -6,8 +6,9 @@ import com.task.praytimes.times.data.repo.Repo
 import com.task.praytimes.times.presentation.PrayerTimes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class PrayerTimesUseCase(
+class PrayerTimesUseCase @Inject constructor(
     private val repo: Repo
 ) {
     private val TAG = "TAG PrayerTimesUseCase"

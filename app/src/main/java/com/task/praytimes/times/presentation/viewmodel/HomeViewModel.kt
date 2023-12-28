@@ -6,14 +6,16 @@ import com.task.praytimes.times.data.remote.ApiState
 import com.task.praytimes.times.domain.PrayerTimesUseCase
 import com.task.praytimes.times.domain.SchedulerUseCase
 import com.task.praytimes.times.presentation.PrayerTimes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val prayerTimesUseCase: PrayerTimesUseCase,
     private val schedulerUseCase: SchedulerUseCase
 ) : ViewModel() {
@@ -23,18 +25,8 @@ class HomeViewModel(
     val prayerTimesState: StateFlow<ApiState<List<PrayerTimes>>>
         get() = _prayerTimesState
 
-    private val _isScheduled: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    val isScheduled: StateFlow<Boolean>
-        get() = _isScheduled
-    //var isScheduled: Boolean = false
-
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            val scheduled = schedulerUseCase()
-            withContext(Dispatchers.Main) {
-                _isScheduled.value = scheduled
-            }
-        }
+        viewModelScope.launch(Dispatchers.IO) { schedulerUseCase() }
     }
 
     fun getPrayerTimes(
